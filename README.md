@@ -1,6 +1,8 @@
 # Project Title
 
-Guest Management App - by Menica
+Remote Worker Handbook App - by Ryandev.site
+
+This repository showcases my approach to developing a remote worker application, highlighting key features and functionalities. It serves as a boilerplate that you can fork or clone to adapt for your own remote work management needs.
 
 ## Intro
 
