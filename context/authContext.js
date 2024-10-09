@@ -1,69 +1,61 @@
-import React, { createContext, useState } from 'react';
-import * as Yup from 'yup'; // Import Yup for validation
+import { createContext, useState, useEffect } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Create the AuthContext
 export const AuthContext = createContext();
 
-// Define a Yup schema for validating login form (email instead of username)
-const loginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Invalid email address') // Validate email format
-    .required('Email is required'), // Make email required
-  password: Yup.string()
-    .required('Password is required')
-    .min(6, 'Password must be at least 6 characters long'),
-});
-
-
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState(null); // State to hold authentication info
-  const [errors, setErrors] = useState({}); // State to hold validation errors
+  const [token, setToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Dummy static credentials
-  const DUMMY_CREDENTIALS = {
-    email: 'hello@menica.pro',
-    password: 'hellomenicapro',
+  const CREDENTIAL = {
+    valid_email: 'rppdev27@gmail.com',
+    valid_password: 'password123'
   };
 
-  // Login function with Yup validation
-  const login = async (email, password) => {
-  
+  useEffect(() => {
+    checkToken();
+  }, []);
+
+  const checkToken = async () => {
     try {
-      // Validate the input values using Yup schema
-      await loginSchema.validate({ email, password }, { abortEarly: false });
-      
-      // If the credentials match, set authentication
-      if (email === DUMMY_CREDENTIALS.email && password === DUMMY_CREDENTIALS.password) {
-        setAuth({ email });
-        setErrors({}); // Clear errors if authentication succeeds
-        return {
-          login: true,
-        } // Login success
-      } else {
-        setErrors({ general: 'Invalid email or password' }); // Set general error
-        return false;
-      }
-    } catch (validationErrors) {
-      // Catch Yup validation errors and set them in the errors state
-      const formattedErrors = {};
-      
-      validationErrors.inner.forEach((err) => {
-        formattedErrors[err.path] = err.message;
-      });
-
-      setErrors(formattedErrors);
-      return false;
-
+      const userToken = await AsyncStorage.getItem('userToken');
+      setToken(userToken);
+    } catch (error) {
+      console.log('Failed to fetch the token from storage', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Logout function
-  const logout = () => {
-    setAuth(null);
+  const login = async (email, password) => {
+    if (CREDENTIAL.valid_email === email && CREDENTIAL.valid_password === password) {
+      try {
+        await AsyncStorage.setItem('userToken', email);
+        setToken(email);
+        console.log('Login success');
+        return true;
+      } catch (error) {
+        console.log('Failed to store the token', error);
+        return false;
+      }
+    } else {
+      console.log('Login failed');
+      return false;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await AsyncStorage.removeItem('userToken');
+      setToken(null);
+      console.log('Logout success');
+    } catch (error) {
+      console.log('Failed to remove the token', error);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ auth, login, logout, errors }}>
+    <AuthContext.Provider value={{ token, isLoading, login, logout, checkToken }}>
       {children}
     </AuthContext.Provider>
   );
