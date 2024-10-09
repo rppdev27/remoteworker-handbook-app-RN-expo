@@ -29,4 +29,4 @@ This project uses:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/rppdev27/guest-management-app-expo-RN-wedding-menica
+   git clone https://github.com/rppdev27/remoteworker-handbook-app-RN-expo

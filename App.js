@@ -2,17 +2,12 @@ import React, { useContext } from 'react';
 import { View, Text } from 'react-native';
 import { AuthProvider, AuthContext } from './context/authContext';
 import LoginScreen from './components/screen/LoginScreen';
+import SignupScreen from './components/screen/SignupScreen'; // Make sure to create this component
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { HomeScreen } from './components/screen/HomeScreen';
 
 const Stack = createNativeStackNavigator();
-
-// New protected screen
-const HomeScreen = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>Welcome to the Home Screen!</Text>
-  </View>
-);
 
 const AppContent = () => {
   const { token, isLoading } = useContext(AuthContext);
@@ -27,13 +22,19 @@ const AppContent = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName='Login'>
         {token == null ? (
-          // Unprotected route
-          <Stack.Screen name="Login" component={LoginScreen} />
+          // Unprotected routes
+          <>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Signup" component={SignupScreen} />
+          </>
         ) : (
-          // Protected route
-          <Stack.Screen name="Home" component={HomeScreen} />
+          // Protected routes
+          <>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            {/* <Stack.Screen name="Signup" component={SignupScreen} /> */}
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
