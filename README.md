@@ -6,14 +6,13 @@ This repository showcases my approach to developing a remote worker application,
 
 ## Intro
 
-This project leverages various libraries for robust functionality:
+This project uses:
 
-   **Yup**: An object schema validation library.
-   **React** Hook Form: A high-performance and adaptable form library for React.
-   **React** Navigation: A comprehensive routing and navigation system for React Native.
-   **Zustand**: Instead of using the React Context API, this project employs Zustand for efficient and scalable global state management.
-   **React Query**: For effective server-side state handling.
-   **Axios**: A promise-based HTTP client for making data fetches to the server efficiently.
+**Yup**: Schema validation
+**React Navigation**: Routing in React Native
+**Context**: Global state management
+**React Query**: Server-state handling
+**Axios**: HTTP client for data fetching
 
 ### UI Development
 
